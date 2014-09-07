@@ -18,8 +18,7 @@ func Register(r *mux.Router) {
 
 	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
-		loginForm := new(forms.Login)
-		formErrors := loginForm.Validate(r.Form)
+		formErrors := forms.Login.Validate(r.Form)
 		if len(formErrors) > 0 {
 			fmt.Println(formErrors)
 			return

@@ -25,8 +25,7 @@ func Register(r *mux.Router) {
 
 	r.HandleFunc("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
-		signupForm := new(forms.Signup)
-		user, formErrors := signupForm.Validate(r.Form)
+		user, formErrors := forms.Signup.Validate(r.Form)
 		if len(formErrors) > 0 {
 			fmt.Println(formErrors)
 			return

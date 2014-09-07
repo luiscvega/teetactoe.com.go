@@ -8,14 +8,14 @@ import (
 	"./../lib/scrivener"
 )
 
-type Login struct {
+type login struct {
 	Email    string `name:"email"`
 	Password string `name:"password"`
 }
 
-func (login *Login) Validate(params url.Values) []string {
-	body.Parse(params, login)
-	scrivener := scrivener.New(login)
+func (form *login) Validate(params url.Values) []string {
+	body.Parse(params, form)
+	scrivener := scrivener.New(form)
 	scrivener.AssertPresent("Email")
 	scrivener.AssertPresent("Password")
 	return scrivener.Errors

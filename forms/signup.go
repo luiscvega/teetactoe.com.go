@@ -9,7 +9,7 @@ import (
 	"./../models"
 )
 
-type Signup struct {
+type signup struct {
 	Email           string `name:"email"`
 	FirstName       string `name:"first_name"`
 	LastName        string `name:"last_name"`
@@ -17,10 +17,10 @@ type Signup struct {
 	ConfirmPassword string `name:"confirm_password"`
 }
 
-func (signup *Signup) Validate(params url.Values) (user *models.User, formErrors []string) {
-	body.Parse(params, signup)
+func (form *signup) Validate(params url.Values) (user *models.User, formErrors []string) {
+	body.Parse(params, form)
 
-	scrivener := scrivener.New(signup)
+	scrivener := scrivener.New(form)
 	scrivener.AssertPresent("Email")
 	scrivener.AssertPresent("FirstName")
 	scrivener.AssertPresent("LastName")
@@ -32,9 +32,9 @@ func (signup *Signup) Validate(params url.Values) (user *models.User, formErrors
 	}
 
 	user = new(models.User)
-	user.Email = signup.Email
-	user.LastName = signup.FirstName
-	user.FirstName = signup.LastName
+	user.Email = form.Email
+	user.LastName = form.FirstName
+	user.FirstName = form.LastName
 	user.CryptedPassword = "CdFH2da9dFKkPnu23782"
 
 	return
