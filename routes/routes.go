@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func Register(r *mux.Router) {
+func Initialize(r *mux.Router) {
 	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		t := template.Must(template.ParseFiles("views/layout.html", "views/index.html"))
 		t.Execute(w, "index")
@@ -35,5 +35,5 @@ func Register(r *mux.Router) {
 		}
 	})).Methods("POST")
 
-	admin.Register(r.PathPrefix("/admin").Subrouter())
+	admin.Initialize(r.PathPrefix("/admin").Subrouter())
 }
