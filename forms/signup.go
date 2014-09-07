@@ -1,41 +1,41 @@
 package forms
 
 import (
-	"./../models"
-
-	"net/http"
 	"net/url"
+
+	"github.com/luiscvega/body"
+
+	"./../lib/scrivener"
+	"./../models"
 )
 
 type Signup struct {
-	Errors []string
-	Params url.Values
+	Email           string `name:"email"`
+	FirstName       string `name:"first_name"`
+	LastName        string `name:"last_name"`
+	Password        string `name:"password"`
+	ConfirmPassword string `name:"confirm_password"`
 }
 
-func (s *Signup) Validate(r *http.Request) (err error, user *models.User) {
-	r.ParseForm()
+func (signup *Signup) Validate(params url.Values) (user *models.User, formErrors []string) {
+	body.Parse(params, signup)
+
+	scrivener := scrivener.New(signup)
+	scrivener.AssertPresent("Email")
+	scrivener.AssertPresent("FirstName")
+	scrivener.AssertPresent("LastName")
+	scrivener.AssertEqual("Password", "ConfirmPassword")
+
+	if len(scrivener.Errors) > 0 {
+		formErrors = scrivener.Errors
+		return
+	}
 
 	user = new(models.User)
-
-	s.Params = r.Form
-	s.Errors = make([]string, 0)
-
-	s.assertPresent("email")
-	s.assertPresent("first_name")
-	s.assertPresent("last_name")
-	s.assertEqual("password", "confirm_password")
+	user.Email = signup.Email
+	user.LastName = signup.FirstName
+	user.FirstName = signup.LastName
+	user.CryptedPassword = "CdFH2da9dFKkPnu23782"
 
 	return
-}
-
-func (s *Signup) assertPresent(field string) {
-	if s.Params.Get(field) == "" {
-		s.Errors = append(s.Errors, field + " can't be blank!")
-	}
-}
-
-func (s *Signup) assertEqual(field1 string, field2 string) {
-	if s.Params.Get(field1) != s.Params.Get(field2) {
-		s.Errors = append(s.Errors, field1 + " and " + field2 + " do not match!")
-	}
 }

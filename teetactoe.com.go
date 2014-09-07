@@ -12,7 +12,7 @@ func main() {
 	r := mux.NewRouter()
 	r.StrictSlash(true)
 
-	routes.Routes(r)
+	routes.Register(r)
 
 	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public"))))
 	http.Handle("/", r)
