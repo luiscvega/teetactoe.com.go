@@ -1,20 +1,14 @@
 package routes
 
 import (
-<<<<<<< HEAD
 	"fmt"
-=======
 	"errors"
->>>>>>> 5697a4eb11227eb256199fb48a08703412ba51d5
 	"net/http"
 	"text/template"
 
 	"./../logic"
-<<<<<<< HEAD
 	"./../forms"
-=======
 	"./../models"
->>>>>>> 5697a4eb11227eb256199fb48a08703412ba51d5
 	"./admin"
 
 	"github.com/gorilla/mux"
@@ -32,20 +26,11 @@ func Routes(r *mux.Router) {
 	})).Methods("GET")
 
 	r.HandleFunc("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-<<<<<<< HEAD
 		signupForm := new(forms.Signup)
 		err, user := signupForm.Validate(r)
 
 		if len(signupForm.Errors) > 0 {
 			fmt.Println(signupForm.Errors)
-		}
-
-=======
-		err, user := validateSignupForm(r)
->>>>>>> 5697a4eb11227eb256199fb48a08703412ba51d5
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
 		}
 
 		if err = logic.CreateUser(user); err != nil {
