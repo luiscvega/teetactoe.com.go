@@ -2,13 +2,11 @@ package routes
 
 import (
 	"fmt"
-	"errors"
 	"net/http"
 	"text/template"
 
-	"./../logic"
 	"./../forms"
-	"./../models"
+	"./../logic"
 	"./admin"
 
 	"github.com/gorilla/mux"
@@ -26,45 +24,33 @@ func Routes(r *mux.Router) {
 	})).Methods("GET")
 
 	r.HandleFunc("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		signupForm := new(forms.Signup)
-		err, user := signupForm.Validate(r)
+		r.ParseForm()
 
-		if len(signupForm.Errors) > 0 {
-			fmt.Println(signupForm.Errors)
+		user, formErrors := forms.ValidateSignupForm(r.Form)
+		if len(formErrors) > 0 {
+			fmt.Println(formErrors)
+			return
 		}
 
-		if err = logic.CreateUser(user); err != nil {
+		if err := logic.CreateUser(user); err != nil {
 		}
 	})).Methods("POST")
 
+	r.HandleFunc("/login", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t := template.Must(template.ParseFiles("views/layout.html", "views/login.html"))
+		t.Execute(w, nil)
+	})).Methods("GET")
+
+	r.HandleFunc("/login", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.ParseForm()
+		formErrors := forms.ValidateLoginForm(r.Form)
+		if len(formErrors) > 0 {
+			fmt.Println(formErrors)
+			return
+		}
+
+		fmt.Println("No errors!")
+	})).Methods("POST")
+
 	admin.Routes(r.PathPrefix("/admin").Subrouter())
-}
-
-func validateSignupForm(r *http.Request) (err error, user *models.User) {
-	r.ParseForm()
-
-	user = new(models.User)
-	form := r.Form
-
-	if form.Get("password") != form.Get("confirm_password") {
-		err = errors.New("Passwords don't match!!!")
-		return
-	}
-
-	if user.Email = form.Get("email"); user.Email == "" {
-		err = errors.New("Email can't be blank!")
-		return
-	}
-
-	if user.FirstName = form.Get("first_name"); user.FirstName == "" {
-		err = errors.New("First name can't be blank!")
-		return
-	}
-
-	if user.LastName = form.Get("last_name"); user.LastName == "" {
-		err = errors.New("Last name can't be blank!")
-		return
-	}
-
-	return
 }
