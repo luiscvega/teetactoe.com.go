@@ -25,5 +25,4 @@ func Initialize(r *mux.Router) {
 		}
 		fmt.Println("No errors!")
 	})).Methods("POST")
-
 }

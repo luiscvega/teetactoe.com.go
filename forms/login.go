@@ -12,7 +12,7 @@ type login struct {
 	Password string `name:"password"`
 }
 
-func (form *login) Validate(params url.Values) []string {
+func (form *login) Validate(params url.Values) scrivener.Errors {
 	body.Parse(params, form)
 	scrivener := scrivener.New(form)
 	scrivener.AssertPresent("Email")

@@ -17,14 +17,14 @@ type signup struct {
 	ConfirmPassword string `name:"confirm_password"`
 }
 
-func (form *signup) Validate(params url.Values) (user *models.User, formErrors []string) {
+func (form *signup) Validate(params url.Values) (user *models.User, formErrors scrivener.Errors) {
 	body.Parse(params, form)
 
 	scrivener := scrivener.New(form)
 	scrivener.AssertPresent("Email")
 	scrivener.AssertPresent("FirstName")
 	scrivener.AssertPresent("LastName")
-	scrivener.AssertEqual("Password", "ConfirmPassword")
+	scrivener.AssertEqualString("Password", form.ConfirmPassword)
 
 	if len(scrivener.Errors) > 0 {
 		formErrors = scrivener.Errors
