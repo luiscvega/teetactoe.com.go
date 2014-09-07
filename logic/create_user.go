@@ -6,8 +6,9 @@ import (
 	"./../models"
 )
 
-func CreateUser(user *models.User) (err error) {
-	fmt.Println("CREATED A USER!", user)
-
+func CreateUser(user *models.User, password string) (err error) {
+	user.CryptedPassword = password
+	user.Id = 12314123123
+	fmt.Println(user)
 	return
 }

@@ -31,8 +31,11 @@ func Initialize(r *mux.Router) {
 			return
 		}
 
-		if err := logic.CreateUser(user); err != nil {
+		password := r.FormValue("password")
+		if err := logic.CreateUser(user, password); err != nil {
 		}
+
+		fmt.Println(user.Id)
 	})).Methods("POST")
 
 	admin.Initialize(r.PathPrefix("/admin").Subrouter())
