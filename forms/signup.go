@@ -4,8 +4,8 @@ import (
 	"net/url"
 
 	"github.com/luiscvega/body"
+	"github.com/luiscvega/scrivener"
 
-	"./../lib/scrivener"
 	"./../models"
 )
 

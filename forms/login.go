@@ -4,8 +4,7 @@ import (
 	"net/url"
 
 	"github.com/luiscvega/body"
-
-	"./../lib/scrivener"
+	"github.com/luiscvega/scrivener"
 )
 
 type login struct {

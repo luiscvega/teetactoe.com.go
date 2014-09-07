@@ -23,7 +23,6 @@ func Register(r *mux.Router) {
 			fmt.Println(formErrors)
 			return
 		}
-
 		fmt.Println("No errors!")
 	})).Methods("POST")
 
