@@ -24,14 +24,14 @@ func Initialize(r *mux.Router) {
 	})).Methods("GET")
 
 	r.HandleFunc("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
+		password := r.FormValue("password") // This calls r.ParseForm() already
+
 		user, formErrors := forms.Signup.Validate(r.Form)
 		if formErrors.Any() {
 			fmt.Println(formErrors)
 			return
 		}
 
-		password := r.FormValue("password")
 		if err := logic.CreateUser(user, password); err != nil {
 		}
 
