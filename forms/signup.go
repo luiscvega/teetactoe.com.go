@@ -26,7 +26,9 @@ func (form *signup) Validate(params url.Values) (user *models.User, formErrors s
 	scrivener.AssertPresent("LastName")
 
 	if scrivener.AssertPresent("Password") && scrivener.AssertPresent("ConfirmPassword") {
-		scrivener.AssertEqualString("Password", form.ConfirmPassword)
+		scrivener.Assert(func(interface{}) bool {
+			return form.Password == form.ConfirmPassword
+		}, "passwords", "not_match")
 	}
 
 	if len(scrivener.Errors) > 0 {
