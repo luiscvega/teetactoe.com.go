@@ -10,12 +10,22 @@ import (
 	"./admin"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/sessions"
 )
+
+var store = sessions.NewCookieStore([]byte("something-very-secret"))
+
+type Page struct {
+	Session *sessions.Session
+}
 
 func Initialize(r *mux.Router) {
 	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		session, _ := store.Get(r, "teetactoe.com")
 		t := template.Must(template.ParseFiles("views/layout.html", "views/index.html"))
-		t.Execute(w, "index")
+		page := Page{session}
+		fmt.Println(page.Session.Values)
+		t.Execute(w, page)
 	})).Methods("GET")
 
 	r.HandleFunc("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -34,6 +44,10 @@ func Initialize(r *mux.Router) {
 
 		if err := logic.CreateUser(user, password); err != nil {
 		}
+
+		session, _ := store.Get(r, "teetactoe.com")
+		session.Values["user_id"] = user.Id
+		session.Save(r, w)
 
 		http.Redirect(w, r, "/", 303)
 	})).Methods("POST")

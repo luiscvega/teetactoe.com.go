@@ -1,7 +1,7 @@
 package models
 
 type User struct {
-	Id		int64
+	Id              int64
 	Email           string
 	FirstName       string
 	LastName        string
@@ -14,5 +14,5 @@ type User struct {
 //email VARCHAR(255),
 //first_name VARCHAR(255),
 //last_name VARCHAR(255),
-//password VARCHAR(255)
+//crypted_password VARCHAR(255)
 //);
