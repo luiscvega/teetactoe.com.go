@@ -38,8 +38,8 @@ func (form *signup) Validate(params url.Values) (user *models.User, formErrors s
 
 	user = new(models.User)
 	user.Email = form.Email
-	user.LastName = form.FirstName
-	user.FirstName = form.LastName
+	user.FirstName = form.FirstName
+	user.LastName = form.LastName
 	user.CryptedPassword = "CdFH2da9dFKkPnu23782"
 
 	return

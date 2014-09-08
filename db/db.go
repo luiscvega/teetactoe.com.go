@@ -24,7 +24,6 @@ func main() {
 	}
 
 	defer rows.Close()
-
 	for rows.Next() {
 		if err := rows.Scan(&first_name, &last_name); err != nil {
 			log.Fatal(err)
