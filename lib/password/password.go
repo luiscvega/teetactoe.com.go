@@ -2,6 +2,8 @@ package password
 
 import (
 	"crypto"
+
+	"code.google.com/p/go.crypto/bcrypt"
 )
 
 const (
@@ -16,20 +18,19 @@ func Check(password string, hash string) {
     return digest(password, salt) === sha512;
 };
 
-exports.crypt = function crypt(password) {
+func Crypt(password sring) {
     var salt = randomSalt();
 
     return digest(password, salt) + salt;
 }
 
-function randomSalt() {
+func randomSalt() string {
     return crypto.randomBytes(32).toString("hex");
 }
 
-function digest(password, salt) {
+func digest(password string, salt string) string {
     return crypto.pbkdf2Sync(
         password, salt,
         ITERATIONS, KEYLEN
     ).toString("hex");
 };
-

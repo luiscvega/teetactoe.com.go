@@ -22,6 +22,7 @@ func CreateUser(user *models.User, password string) (err error) {
 	err = stmt.QueryRow(user.Email, user.FirstName, user.LastName, user.CryptedPassword).Scan(&user.Id)
 	if err != nil {
 		log.Fatal(err)
+		return err
 	}
 
 	defer db.Close()
