@@ -1,14 +1,25 @@
 package main
 
 import (
+	"database/sql"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
+        _ "github.com/lib/pq"
 
+	"./logic"
 	"./routes"
 )
 
 func main() {
+	db, err := sql.Open("postgres", "postgres://localhost/luis?sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+        logic.Init(db)
+
 	r := mux.NewRouter()
 	r.StrictSlash(true)
 
@@ -18,4 +29,6 @@ func main() {
 	http.Handle("/", r)
 
 	http.ListenAndServe(":3000", nil)
+
+	defer db.Close()
 }

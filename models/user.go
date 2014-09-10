@@ -8,8 +8,8 @@ type User struct {
 	CryptedPassword string
 }
 
-func (u *User) FullName(suffix string) string {
-        return suffix + " " + u.FirstName + " " + u.LastName
+func (u *User) FullName() string {
+        return u.FirstName + " " + u.LastName
 }
 
 //CREATE TABLE users

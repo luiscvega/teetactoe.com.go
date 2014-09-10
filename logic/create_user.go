@@ -1,20 +1,12 @@
 package logic
 
 import (
-	"database/sql"
 	"log"
-
-	_ "github.com/lib/pq"
 
 	"./../models"
 )
 
 func CreateUser(user *models.User, password string) (err error) {
-	db, err := sql.Open("postgres", "postgres://localhost/luis?sslmode=disable")
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	user.CryptedPassword = "booomboxhawehfajkdfhaljkshr3lhalf"
 
 	stmt, err := db.Prepare("INSERT INTO users (email, first_name, last_name, crypted_password) VALUES ($1, $2, $3, $4) RETURNING id")
@@ -26,8 +18,6 @@ func CreateUser(user *models.User, password string) (err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	defer db.Close()
 
 	return
 }
