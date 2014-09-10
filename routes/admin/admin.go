@@ -1,7 +1,6 @@
 package admin
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 	"text/template"
