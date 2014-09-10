@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"text/template"
 
@@ -18,11 +18,13 @@ func Initialize(r *mux.Router) {
 
 	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
+
 		formErrors := forms.Login.Validate(r.Form)
 		if len(formErrors) > 0 {
-			fmt.Println(formErrors)
+			log.Println(formErrors)
 			return
 		}
-		fmt.Println("No errors!")
+
+		http.Redirect(w, r, "/", 303)
 	})).Methods("POST")
 }
