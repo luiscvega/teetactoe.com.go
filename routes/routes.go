@@ -1,9 +1,7 @@
 package routes
 
 import (
-	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"text/template"
 
@@ -30,16 +28,9 @@ func Initialize(r *mux.Router) {
 		t := template.Must(template.ParseFiles("views/layout.html", "views/index.html"))
 
 		user := new(models.User)
-		var err error
 		userId, found := session.Values["user_id"].(int64)
 		if found {
-			user, err = logic.GetUser(userId)
-			switch {
-			case err == sql.ErrNoRows:
-				log.Println("No rows!")
-			case err != nil:
-				log.Fatal(err)
-			}
+			user = logic.GetUser(userId)
 		}
 
 		page := Page{

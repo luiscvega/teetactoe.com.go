@@ -7,10 +7,10 @@ import (
 	"./../models"
 )
 
-func GetUser(id int64) (user *models.User) {
+func GetUserByEmail(email string) (user *models.User) {
 	user = new(models.User)
 
-	err := DB.QueryRow("SELECT id, email, first_name, last_name FROM users WHERE id = $1", id).Scan(&user.Id, &user.Email, &user.FirstName, &user.LastName)
+	err := DB.QueryRow("SELECT id, email, first_name, last_name FROM users WHERE email = $1", email).Scan(&user.Id, &user.Email, &user.FirstName, &user.LastName)
 	switch {
 	case err == sql.ErrNoRows:
 		log.Println("No rows!")
