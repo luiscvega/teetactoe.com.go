@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-        _ "github.com/lib/pq"
+	_ "github.com/lib/pq"
 
 	"./logic"
 	"./routes"
@@ -17,7 +17,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-        logic.DB = db
+	logic.DB = db
 
 	r := mux.NewRouter()
 	r.StrictSlash(true)

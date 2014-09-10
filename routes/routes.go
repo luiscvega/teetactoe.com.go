@@ -19,7 +19,7 @@ import (
 var store = sessions.NewCookieStore([]byte("something-very-secret"))
 
 type Page struct {
-	Session map[interface{}]interface{}
+	Session     map[interface{}]interface{}
 	CurrentUser *models.User
 }
 
@@ -31,18 +31,19 @@ func Initialize(r *mux.Router) {
 
 		user := new(models.User)
 		var err error
-		userId, result := session.Values["user_id"].(int64)
-		if result != false {
+		userId, found := session.Values["user_id"].(int64)
+		if found {
 			user, err = logic.GetUser(userId)
-			if err != nil {
-				if err != sql.ErrNoRows {
-					log.Fatal(err)
-				}
+			switch {
+			case err == sql.ErrNoRows:
+				log.Println("No rows!")
+			case err != nil:
+				log.Fatal(err)
 			}
 		}
 
 		page := Page{
-			Session: session.Values,
+			Session:     session.Values,
 			CurrentUser: user}
 
 		t.Execute(w, page)
