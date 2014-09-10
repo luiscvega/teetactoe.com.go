@@ -7,7 +7,7 @@ import (
 )
 
 func CreateUser(user *models.User, password string) (err error) {
-	user.CryptedPassword = "booomboxhawehfajkdfhaljkshr3lhalf"
+	user.CryptedPassword = password
 
 	stmt, err := DB.Prepare("INSERT INTO users (email, first_name, last_name, crypted_password) VALUES ($1, $2, $3, $4) RETURNING id")
 	if err != nil {

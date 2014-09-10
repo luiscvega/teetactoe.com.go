@@ -22,6 +22,7 @@ func Initialize(r *mux.Router) {
 
 	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		email := r.FormValue("email")
+		password := r.FormValue("password")
 
 		formErrors := forms.Login.Validate(r.Form)
 		if len(formErrors) > 0 {
@@ -29,7 +30,7 @@ func Initialize(r *mux.Router) {
 			return
 		}
 
-		user := logic.GetUserByEmail(email)
+		user := logic.AuthenticateUser(email, password)
 
 		session, _ := store.Get(r, "teetactoe.com")
 		session.Values["user_id"] = user.Id
