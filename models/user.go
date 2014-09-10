@@ -8,6 +8,10 @@ type User struct {
 	CryptedPassword string
 }
 
+func (u *User) FullName(suffix string) string {
+        return suffix + " " + u.FirstName + " " + u.LastName
+}
+
 //CREATE TABLE users
 //(
 //id SERIAL PRIMARY KEY,
