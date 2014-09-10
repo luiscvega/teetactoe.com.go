@@ -17,8 +17,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-        logic.Init(db)
+        logic.DB = db
 
 	r := mux.NewRouter()
 	r.StrictSlash(true)
