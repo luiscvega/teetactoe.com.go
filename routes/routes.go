@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -25,16 +26,25 @@ type Page struct {
 func Initialize(r *mux.Router) {
 	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "teetactoe.com")
+
 		t := template.Must(template.ParseFiles("views/layout.html", "views/index.html"))
 
-		user, err := logic.GetUser(session.Values["user_id"].(int64))
-		if err != nil {
-			log.Fatal(err)
+		user := new(models.User)
+		var err error
+		userId, result := session.Values["user_id"].(int64)
+		if result != false {
+			user, err = logic.GetUser(userId)
+			if err != nil {
+				if err != sql.ErrNoRows {
+					log.Fatal(err)
+				}
+			}
 		}
 
 		page := Page{
 			Session: session.Values,
 			CurrentUser: user}
+
 		t.Execute(w, page)
 	})).Methods("GET")
 
