@@ -2,11 +2,13 @@ package routes
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"text/template"
 
 	"./../forms"
 	"./../logic"
+	"./../models"
 	"./admin"
 
 	"github.com/gorilla/mux"
@@ -16,15 +18,23 @@ import (
 var store = sessions.NewCookieStore([]byte("something-very-secret"))
 
 type Page struct {
-	Session *sessions.Session
+	Session map[interface{}]interface{}
+	CurrentUser *models.User
 }
 
 func Initialize(r *mux.Router) {
 	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "teetactoe.com")
 		t := template.Must(template.ParseFiles("views/layout.html", "views/index.html"))
-		page := Page{session}
-		fmt.Println(page.Session.Values)
+
+		user, err := logic.GetUser(session.Values["user_id"].(int64))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		page := Page{
+			Session: session.Values,
+			CurrentUser: user}
 		t.Execute(w, page)
 	})).Methods("GET")
 

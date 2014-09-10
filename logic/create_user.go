@@ -11,6 +11,9 @@ import (
 
 func CreateUser(user *models.User, password string) (err error) {
 	db, err := sql.Open("postgres", "postgres://localhost/luis?sslmode=disable")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	user.CryptedPassword = "booomboxhawehfajkdfhaljkshr3lhalf"
 
