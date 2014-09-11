@@ -5,11 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 
 	"./logic"
 	"./routes"
+	"./routes/admin"
 )
 
 func main() {
@@ -19,13 +19,9 @@ func main() {
 	}
 	logic.DB = db
 
-	r := mux.NewRouter()
-	r.StrictSlash(true)
-
-	routes.Initialize(r)
-
 	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public"))))
-	http.Handle("/", r)
+	http.Handle("/admin/", admin.Initialize())
+	http.Handle("/", routes.Initialize())
 
 	http.ListenAndServe(":3000", nil)
 

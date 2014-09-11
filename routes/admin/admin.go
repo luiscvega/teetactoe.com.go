@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/gorilla/mux"
+	"github.com/bmizerany/pat"
 	"github.com/gorilla/sessions"
 
 	"./../../forms"
@@ -14,13 +14,15 @@ import (
 
 var store = sessions.NewCookieStore([]byte("something-very-secret"))
 
-func Initialize(r *mux.Router) {
-	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func Initialize() *pat.PatternServeMux {
+        m := pat.New()
+
+	m.Get("/admin/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		t := template.Must(template.ParseFiles("views/layout.html", "views/login.html"))
 		t.Execute(w, nil)
-	})).Methods("GET")
+	}))
 
-	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	m.Post("/admin/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 
@@ -37,13 +39,15 @@ func Initialize(r *mux.Router) {
 		session.Save(r, w)
 
 		http.Redirect(w, r, "/", 303)
-	})).Methods("POST")
+	}))
 
-	r.HandleFunc("/logout", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	m.Get("/admin/logout", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "teetactoe.com")
 		delete(session.Values, "user_id")
 		session.Save(r, w)
 
 		http.Redirect(w, r, "/", 303)
-	})).Methods("GET")
+	}))
+
+        return m
 }

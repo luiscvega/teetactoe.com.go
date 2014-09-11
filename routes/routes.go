@@ -9,9 +9,8 @@ import (
 	"./../forms"
 	"./../logic"
 	"./../models"
-	"./admin"
 
-	"github.com/gorilla/mux"
+	"github.com/bmizerany/pat"
 	"github.com/gorilla/sessions"
 )
 
@@ -23,8 +22,10 @@ type Page struct {
 	CurrentUser *models.User
 }
 
-func Initialize(r *mux.Router) {
-	r.HandleFunc("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func Initialize() *pat.PatternServeMux {
+	m := pat.New()
+
+	m.Get("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "teetactoe.com")
 		flashes := session.Flashes()
 		session.Save(r, w)
@@ -43,14 +44,14 @@ func Initialize(r *mux.Router) {
 			CurrentUser: user}
 
 		t.Execute(w, page)
-	})).Methods("GET")
+	}))
 
-	r.HandleFunc("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	m.Get("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		t := template.Must(template.ParseFiles("views/layout.html", "views/signup.html"))
 		t.Execute(w, nil)
-	})).Methods("GET")
+	}))
 
-	r.HandleFunc("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	m.Post("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password") // This calls r.ParseForm() already
 
 		user, formErrors := forms.Signup.Validate(r.Form)
@@ -69,8 +70,12 @@ func Initialize(r *mux.Router) {
 			}
 		}
 
-		http.Redirect(w, r, "/", 303)
-	})).Methods("POST")
+		session, _ := store.Get(r, "teetactoe.com")
+		session.Values["user_id"] = user.Id
+		session.Save(r, w)
 
-	admin.Initialize(r.PathPrefix("/admin").Subrouter())
+		http.Redirect(w, r, "/", 303)
+	}))
+
+	return m
 }
