@@ -51,8 +51,6 @@ func Initialize(r *mux.Router) {
 	})).Methods("GET")
 
 	r.HandleFunc("/signup", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		session, _ := store.Get(r, "teetactoe.com")
-
 		password := r.FormValue("password") // This calls r.ParseForm() already
 
 		user, formErrors := forms.Signup.Validate(r.Form)
@@ -64,8 +62,8 @@ func Initialize(r *mux.Router) {
 		if err := logic.CreateUser(user, password); err != nil {
 			switch {
 			case err.Error() == "A user with that email already exists!":
-				session.AddFlash(err.Error())
-				session.Save(r, w)
+				http.Error(w, err.Error(), 500)
+				return
 			default:
 				log.Fatal(err)
 			}
