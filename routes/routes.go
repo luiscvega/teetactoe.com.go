@@ -2,6 +2,7 @@ package routes
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"text/template"
 
@@ -55,6 +56,7 @@ func Initialize(r *mux.Router) {
 		}
 
 		if err := logic.CreateUser(user, password); err != nil {
+			log.Fatal(err)
 		}
 
 		session, _ := store.Get(r, "teetactoe.com")
