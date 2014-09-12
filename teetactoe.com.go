@@ -9,7 +9,6 @@ import (
 
 	"./logic"
 	"./routes"
-	"./routes/admin"
 )
 
 func main() {
@@ -20,7 +19,7 @@ func main() {
 	logic.DB = db
 
 	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public"))))
-	http.Handle("/admin/", admin.Initialize())
+
 	http.Handle("/", routes.Initialize())
 
 	http.ListenAndServe(":3000", nil)
