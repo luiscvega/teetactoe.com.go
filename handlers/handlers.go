@@ -15,6 +15,10 @@ import (
 
 var store = sessions.NewCookieStore([]byte("something-very-secret"))
 
+func render(view string) *template.Template {
+	return template.Must(template.ParseFiles("views/layout.html", view))
+}
+
 type Page struct {
 	Session     map[interface{}]interface{}
 	Flashes     []interface{}
@@ -25,8 +29,6 @@ func Root(w http.ResponseWriter, r *http.Request) {
 	session, _ := store.Get(r, "teetactoe.com")
 	flashes := session.Flashes()
 	session.Save(r, w)
-
-	t := template.Must(template.ParseFiles("views/layout.html", "views/index.html"))
 
 	user := new(models.User)
 	userId, ok := session.Values["user_id"].(int64)
@@ -39,12 +41,11 @@ func Root(w http.ResponseWriter, r *http.Request) {
 		Flashes:     flashes,
 		CurrentUser: user}
 
-	t.Execute(w, page)
+	render("views/index.html").Execute(w, page)
 }
 
 func Signup(w http.ResponseWriter, r *http.Request) {
-	t := template.Must(template.ParseFiles("views/layout.html", "views/signup.html"))
-	t.Execute(w, nil)
+	render("views/signup.html").Execute(w, nil)
 }
 
 func SignupSubmit(w http.ResponseWriter, r *http.Request) {
@@ -74,8 +75,7 @@ func SignupSubmit(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	t := template.Must(template.ParseFiles("views/layout.html", "views/login.html"))
-	t.Execute(w, nil)
+	render("views/login.html").Execute(w, nil)
 }
 
 func LoginSubmit(w http.ResponseWriter, r *http.Request) {
