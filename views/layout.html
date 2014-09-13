@@ -38,7 +38,8 @@
 
           <ul class="nav navbar-nav navbar-right">
               <!-- <li><a href="/admin">First Name Last Name</a></li> -->
-              {{if .CurrentUser.Id}}
+              {{if .CurrentUser}}
+                <li><a href="#">{{.CurrentUser.FullName}}</a></li>
                 <li><a href="/admin/logout">Log Out</a></li>
               {{else}}
                 <li><a href="/signup">Sign Up</a></li>

@@ -7,30 +7,14 @@ import (
 
 	"./../forms"
 	"./../logic"
-	"./../models"
 )
 
-type Page struct {
-	Session     map[interface{}]interface{}
-	CurrentUser *models.User
-}
-
 func Root(ctx Context) {
-	user := new(models.User)
-	userId, ok := ctx.Session.Values["user_id"].(int64)
-	if ok {
-		user = logic.GetUser(userId)
-	}
-
-	page := Page{
-		Session:     ctx.Session.Values,
-		CurrentUser: user}
-
-	ctx.render("views/index.html", page)
+	ctx.Render("views/index.html", ctx.Page)
 }
 
 func Signup(ctx Context) {
-	ctx.render("views/signup.html", nil)
+	ctx.Render("views/signup.html", ctx.Page)
 }
 
 func SignupSubmit(ctx Context) {
@@ -55,11 +39,11 @@ func SignupSubmit(ctx Context) {
 	ctx.Session.Values["user_id"] = user.Id
 	ctx.Session.Save(ctx.Request, ctx.Response)
 
-	ctx.redirect("/")
+	ctx.Redirect("/")
 }
 
 func Login(ctx Context) {
-	ctx.render("views/login.html", nil)
+	ctx.Render("views/login.html", ctx.Page)
 }
 
 func LoginSubmit(ctx Context) {
@@ -77,13 +61,12 @@ func LoginSubmit(ctx Context) {
 	ctx.Session.Values["user_id"] = user.Id
 	ctx.Session.Save(ctx.Request, ctx.Response)
 
-	ctx.redirect("/")
+	ctx.Redirect("/")
 }
 
 func Logout(ctx Context) {
 	delete(ctx.Session.Values, "user_id")
 	ctx.Session.Save(ctx.Request, ctx.Response)
 
-
-	ctx.redirect("/")
+	ctx.Redirect("/")
 }
