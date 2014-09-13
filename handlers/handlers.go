@@ -13,10 +13,6 @@ import (
 	"./../models"
 )
 
-func render(view string) *template.Template {
-	return template.Must(template.ParseFiles("views/layout.html", view))
-}
-
 type Page struct {
 	Session     map[interface{}]interface{}
 	CurrentUser *models.User
@@ -26,6 +22,11 @@ type Context struct {
 	Response http.ResponseWriter
 	Request  *http.Request
 	Session  *sessions.Session
+}
+
+func (ctx Context) render(view string, locals interface{}) {
+	t := template.Must(template.ParseFiles("views/layout.html", view))
+	t.Execute(ctx.Response, locals)
 }
 
 func Root(ctx Context) {
@@ -39,11 +40,11 @@ func Root(ctx Context) {
 		Session:     ctx.Session.Values,
 		CurrentUser: user}
 
-	render("views/index.html").Execute(ctx.Response, page)
+	ctx.render("views/index.html", page)
 }
 
 func Signup(ctx Context) {
-	render("views/signup.html").Execute(ctx.Response, nil)
+	ctx.render("views/signup.html", nil)
 }
 
 func SignupSubmit(ctx Context) {
@@ -72,7 +73,7 @@ func SignupSubmit(ctx Context) {
 }
 
 func Login(ctx Context) {
-	render("views/login.html").Execute(ctx.Response, nil)
+	ctx.render("views/login.html", nil)
 }
 
 func LoginSubmit(ctx Context) {
