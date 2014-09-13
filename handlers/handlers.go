@@ -13,45 +13,43 @@ import (
 	"./../models"
 )
 
-var store = sessions.NewCookieStore([]byte("something-very-secret"))
-
 func render(view string) *template.Template {
 	return template.Must(template.ParseFiles("views/layout.html", view))
 }
 
 type Page struct {
 	Session     map[interface{}]interface{}
-	Flashes     []interface{}
 	CurrentUser *models.User
 }
 
-func Root(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "teetactoe.com")
-	flashes := session.Flashes()
-	session.Save(r, w)
+type Context struct {
+	Response http.ResponseWriter
+	Request  *http.Request
+	Session  *sessions.Session
+}
 
+func Root(ctx Context) {
 	user := new(models.User)
-	userId, ok := session.Values["user_id"].(int64)
+	userId, ok := ctx.Session.Values["user_id"].(int64)
 	if ok {
 		user = logic.GetUser(userId)
 	}
 
 	page := Page{
-		Session:     session.Values,
-		Flashes:     flashes,
+		Session:     ctx.Session.Values,
 		CurrentUser: user}
 
-	render("views/index.html").Execute(w, page)
+	render("views/index.html").Execute(ctx.Response, page)
 }
 
-func Signup(w http.ResponseWriter, r *http.Request) {
-	render("views/signup.html").Execute(w, nil)
+func Signup(ctx Context) {
+	render("views/signup.html").Execute(ctx.Response, nil)
 }
 
-func SignupSubmit(w http.ResponseWriter, r *http.Request) {
-	password := r.FormValue("password") // This calls r.ParseForm() already
+func SignupSubmit(ctx Context) {
+	password := ctx.Request.FormValue("password") // This calls r.ParseForm() already
 
-	user, formErrors := forms.Signup.Validate(r.Form)
+	user, formErrors := forms.Signup.Validate(ctx.Request.Form)
 	if formErrors.Any() {
 		fmt.Println(formErrors)
 		return
@@ -60,29 +58,28 @@ func SignupSubmit(w http.ResponseWriter, r *http.Request) {
 	if err := logic.CreateUser(user, password); err != nil {
 		switch {
 		case err.Error() == "A user with that email already exists!":
-			http.Error(w, err.Error(), 500)
+			http.Error(ctx.Response, err.Error(), 500)
 			return
 		default:
 			log.Fatal(err)
 		}
 	}
 
-	session, _ := store.Get(r, "teetactoe.com")
-	session.Values["user_id"] = user.Id
-	session.Save(r, w)
+	ctx.Session.Values["user_id"] = user.Id
+	ctx.Session.Save(ctx.Request, ctx.Response)
 
-	http.Redirect(w, r, "/", 303)
+	http.Redirect(ctx.Response, ctx.Request, "/", 303)
 }
 
-func Login(w http.ResponseWriter, r *http.Request) {
-	render("views/login.html").Execute(w, nil)
+func Login(ctx Context) {
+	render("views/login.html").Execute(ctx.Response, nil)
 }
 
-func LoginSubmit(w http.ResponseWriter, r *http.Request) {
-	email := r.FormValue("email")
-	password := r.FormValue("password")
+func LoginSubmit(ctx Context) {
+	email := ctx.Request.FormValue("email")
+	password := ctx.Request.FormValue("password")
 
-	formErrors := forms.Login.Validate(r.Form)
+	formErrors := forms.Login.Validate(ctx.Request.Form)
 	if len(formErrors) > 0 {
 		log.Fatal(formErrors)
 		return
@@ -90,17 +87,15 @@ func LoginSubmit(w http.ResponseWriter, r *http.Request) {
 
 	user := logic.AuthenticateUser(email, password)
 
-	session, _ := store.Get(r, "teetactoe.com")
-	session.Values["user_id"] = user.Id
-	session.Save(r, w)
+	ctx.Session.Values["user_id"] = user.Id
+	ctx.Session.Save(ctx.Request, ctx.Response)
 
-	http.Redirect(w, r, "/", 303)
+	http.Redirect(ctx.Response, ctx.Request, "/", 303)
 }
 
-func Logout(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "teetactoe.com")
-	delete(session.Values, "user_id")
-	session.Save(r, w)
+func Logout(ctx Context) {
+	delete(ctx.Session.Values, "user_id")
+	ctx.Session.Save(ctx.Request, ctx.Response)
 
-	http.Redirect(w, r, "/", 303)
+	http.Redirect(ctx.Response, ctx.Request, "/", 303)
 }
