@@ -21,8 +21,8 @@ func Initialize() *pat.PatternServeMux {
 	m.Post("/signup", prepare(handlers.SignupSubmit))
 
 	m.Get("/admin/logout", prepare(handlers.Logout))
-	m.Get("/admin/", prepare(handlers.Login))
-	m.Post("/admin/", prepare(handlers.LoginSubmit))
+	m.Get("/admin/login", prepare(handlers.Login))
+	m.Post("/admin/login", prepare(handlers.LoginSubmit))
 
 	return m
 }
