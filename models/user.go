@@ -6,10 +6,11 @@ type User struct {
 	FirstName       string
 	LastName        string
 	CryptedPassword string
+	Campaigns       []*Campaign
 }
 
 func (u *User) FullName() string {
-        return u.FirstName + " " + u.LastName
+	return u.FirstName + " " + u.LastName
 }
 
 //CREATE TABLE users

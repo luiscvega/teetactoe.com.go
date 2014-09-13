@@ -1,17 +1,13 @@
 package handlers
 
 import (
-        "fmt"
+	"fmt"
 
-        "./../forms"
-        "./../logic"
+	"./../forms"
+	"./../logic"
 )
 
 func CampaignsIndexGet(ctx Context) {
-        campaigns := logic.GetUserCampaigns(ctx.Page.CurrentUser.Id)
-        for _, campaign := range campaigns {
-                fmt.Println(campaign.Name)
-        }
 	ctx.Render("views/campaigns/index.html", ctx.Page)
 }
 
@@ -28,8 +24,8 @@ func CampaignCreatePost(ctx Context) {
 		return
 	}
 
-        if err := logic.CreateCampaign(campaign, ctx.Page.CurrentUser.Id); err != nil {
-        }
+	if err := logic.CreateCampaign(campaign, ctx.Page.CurrentUser.Id); err != nil {
+	}
 
 	ctx.Redirect("/")
 }
