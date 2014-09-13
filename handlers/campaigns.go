@@ -8,6 +8,10 @@ import (
 )
 
 func CampaignsIndexGet(ctx Context) {
+        campaigns := logic.GetUserCampaigns(ctx.Page.CurrentUser.Id)
+        for _, campaign := range campaigns {
+                fmt.Println(campaign.Name)
+        }
 	ctx.Render("views/campaigns/index.html", ctx.Page)
 }
 
