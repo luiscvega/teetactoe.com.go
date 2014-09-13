@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"text/template"
-
-	"github.com/gorilla/sessions"
 
 	"./../forms"
 	"./../logic"
@@ -16,17 +13,6 @@ import (
 type Page struct {
 	Session     map[interface{}]interface{}
 	CurrentUser *models.User
-}
-
-type Context struct {
-	Response http.ResponseWriter
-	Request  *http.Request
-	Session  *sessions.Session
-}
-
-func (ctx Context) render(view string, locals interface{}) {
-	t := template.Must(template.ParseFiles("views/layout.html", view))
-	t.Execute(ctx.Response, locals)
 }
 
 func Root(ctx Context) {
@@ -69,7 +55,7 @@ func SignupSubmit(ctx Context) {
 	ctx.Session.Values["user_id"] = user.Id
 	ctx.Session.Save(ctx.Request, ctx.Response)
 
-	http.Redirect(ctx.Response, ctx.Request, "/", 303)
+	ctx.redirect("/")
 }
 
 func Login(ctx Context) {
@@ -91,12 +77,13 @@ func LoginSubmit(ctx Context) {
 	ctx.Session.Values["user_id"] = user.Id
 	ctx.Session.Save(ctx.Request, ctx.Response)
 
-	http.Redirect(ctx.Response, ctx.Request, "/", 303)
+	ctx.redirect("/")
 }
 
 func Logout(ctx Context) {
 	delete(ctx.Session.Values, "user_id")
 	ctx.Session.Save(ctx.Request, ctx.Response)
 
-	http.Redirect(ctx.Response, ctx.Request, "/", 303)
+
+	ctx.redirect("/")
 }
