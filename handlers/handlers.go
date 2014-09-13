@@ -9,15 +9,15 @@ import (
 	"./../logic"
 )
 
-func Root(ctx Context) {
+func RootGet(ctx Context) {
 	ctx.Render("views/index.html", ctx.Page)
 }
 
-func Signup(ctx Context) {
+func SignupGet(ctx Context) {
 	ctx.Render("views/signup.html", ctx.Page)
 }
 
-func SignupSubmit(ctx Context) {
+func SignupPost(ctx Context) {
 	password := ctx.Request.FormValue("password") // This calls r.ParseForm() already
 
 	user, formErrors := forms.Signup.Validate(ctx.Request.Form)
@@ -42,11 +42,11 @@ func SignupSubmit(ctx Context) {
 	ctx.Redirect("/")
 }
 
-func Login(ctx Context) {
+func LoginGet(ctx Context) {
 	ctx.Render("views/login.html", ctx.Page)
 }
 
-func LoginSubmit(ctx Context) {
+func LoginPost(ctx Context) {
 	email := ctx.Request.FormValue("email")
 	password := ctx.Request.FormValue("password")
 
@@ -64,7 +64,7 @@ func LoginSubmit(ctx Context) {
 	ctx.Redirect("/")
 }
 
-func Logout(ctx Context) {
+func LogoutGet(ctx Context) {
 	delete(ctx.Session.Values, "user_id")
 	ctx.Session.Save(ctx.Request, ctx.Response)
 

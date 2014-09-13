@@ -33,7 +33,11 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
           <ul class="nav navbar-nav navbar-left">
-            <li><a href="/campaigns">Discover</a></li>
+              {{if .CurrentUser}}
+                <li><a href="/admin/campaigns">Campaigns</a></li>
+              {{else}}
+                <li><a href="/campaigns">Discover</a></li>
+              {{end}}
           </ul>
 
           <ul class="nav navbar-nav navbar-right">

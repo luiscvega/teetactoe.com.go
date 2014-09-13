@@ -15,14 +15,18 @@ var store = sessions.NewCookieStore([]byte("something-very-secret"))
 func Initialize() *pat.PatternServeMux {
 	m := pat.New()
 
-	m.Get("/", prepare(handlers.Root))
+	m.Get("/", prepare(handlers.RootGet))
 
-	m.Get("/signup", prepare(handlers.Signup))
-	m.Post("/signup", prepare(handlers.SignupSubmit))
+	m.Get("/signup", prepare(handlers.SignupGet))
+	m.Post("/signup", prepare(handlers.SignupPost))
 
-	m.Get("/admin/logout", prepare(handlers.Logout))
-	m.Get("/admin/login", prepare(handlers.Login))
-	m.Post("/admin/login", prepare(handlers.LoginSubmit))
+	m.Get("/admin/logout", prepare(handlers.LogoutGet))
+	m.Get("/admin/login", prepare(handlers.LoginGet))
+	m.Post("/admin/login", prepare(handlers.LoginPost))
+
+	m.Get("/admin/campaigns", prepare(handlers.CampaignsIndexGet))
+	m.Post("/admin/campaigns", prepare(handlers.CampaignCreatePost))
+	m.Get("/admin/campaigns/new", prepare(handlers.CampaignNewGet))
 
 	return m
 }
