@@ -10,6 +10,8 @@ import (
 )
 
 func CreateCampaign(campaign *models.Campaign, userId int64) (err error) {
+	campaign.UserId = userId
+
 	scrivener := scrivener.New(campaign)
 	scrivener.AssertPresent("UserId")
 
