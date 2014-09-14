@@ -7,10 +7,7 @@ import (
 	"github.com/gorilla/sessions"
 
 	"./../handlers"
-	"./../logic"
 )
-
-var store = sessions.NewCookieStore([]byte("something-very-secret"))
 
 func Initialize() *pat.PatternServeMux {
 	m := pat.New()
@@ -31,23 +28,16 @@ func Initialize() *pat.PatternServeMux {
 	return m
 }
 
+var store = sessions.NewCookieStore([]byte("something-very-secret"))
+
 func prepare(handler func(ctx handlers.Context)) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "teetactoe.com")
 
-		page := handlers.Page{
-			Session: session.Values}
-
-		userId, ok := session.Values["user_id"].(int64)
-		if ok {
-			page.CurrentUser = logic.GetUser(userId)
-		}
-
 		ctx := handlers.Context{
 			Response: w,
 			Request:  r,
-			Session:  session,
-			Page:     page}
+			Session:  session}
 
 		handler(ctx)
 	})

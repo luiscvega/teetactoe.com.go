@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/sessions"
 
+	"./../logic"
 	"./../models"
 )
 
@@ -18,7 +19,16 @@ type Context struct {
 
 func (ctx Context) Render(view string, locals interface{}) {
 	t := template.Must(template.ParseFiles("views/layout.html", view))
-	t.Execute(ctx.Response, locals)
+
+	page := Page{
+		Locals: locals}
+
+	userId, ok := ctx.Session.Values["user_id"].(int64)
+	if ok {
+		page.CurrentUser = logic.GetUser(userId)
+	}
+
+	t.Execute(ctx.Response, page)
 }
 
 func (ctx Context) Redirect(url string) {
@@ -26,6 +36,6 @@ func (ctx Context) Redirect(url string) {
 }
 
 type Page struct {
-	Session     map[interface{}]interface{}
 	CurrentUser *models.User
+	Locals      interface{}
 }

@@ -19,7 +19,5 @@ func GetUser(id int64) (user *models.User) {
 		log.Fatal(err)
 	}
 
-	user.Campaigns = GetUserCampaigns(user.Id)
-
 	return
 }

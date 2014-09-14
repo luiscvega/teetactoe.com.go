@@ -5,10 +5,20 @@ import (
 
 	"./../forms"
 	"./../logic"
+	"./../models"
 )
 
+type RootPage struct {
+	Campaigns []*models.Campaign
+}
+
 func CampaignsIndexGet(ctx Context) {
-	ctx.Render("views/campaigns/index.html", ctx.Page)
+	campaigns := logic.GetUserCampaigns(ctx.Session.Values["user_id"].(int64))
+
+	rootPage := RootPage{
+		Campaigns: campaigns}
+
+	ctx.Render("views/campaigns/index.html", rootPage)
 }
 
 func CampaignNewGet(ctx Context) {
@@ -24,7 +34,7 @@ func CampaignCreatePost(ctx Context) {
 		return
 	}
 
-	if err := logic.CreateCampaign(campaign, ctx.Page.CurrentUser.Id); err != nil {
+	if err := logic.CreateCampaign(campaign, ctx.Session.Values["user_id"].(int64)); err != nil {
 	}
 
 	ctx.Redirect("/")

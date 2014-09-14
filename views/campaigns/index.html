@@ -2,8 +2,10 @@
   <h1>Campaigns!</h1>
   <a href="/admin/campaigns/new">Create Campaign</a>
 
-  {{range .CurrentUser.Campaigns}}
-    <p>{{.Name}}<p>
+  {{with .Locals}}
+    {{range .Campaigns}}
+      <p>{{.Name}}<p>
+    {{end}}
   {{end}}
 
 {{end}}
