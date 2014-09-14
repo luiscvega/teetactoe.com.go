@@ -18,7 +18,7 @@ func CampaignNewGet(ctx Context) {
 func CampaignCreatePost(ctx Context) {
 	ctx.ParseForm()
 
-	campaign, formErrors := forms.CreateCampaign.Validate(ctx.Request.Form)
+	campaign, formErrors := forms.Campaign.Validate(ctx.Request.Form)
 	if formErrors.Any() {
 		fmt.Println(formErrors)
 		return

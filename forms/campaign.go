@@ -9,12 +9,13 @@ import (
 	"./../models"
 )
 
-type createCampaign struct {
+type campaign struct {
 	Name string `name:"name"`
 }
 
-func (form *createCampaign) Validate(params url.Values) (campaign *models.Campaign, formErrors scrivener.Errors) {
+func (form *campaign) Validate(params url.Values) (campaign *models.Campaign, formErrors scrivener.Errors) {
 	body.Parse(params, form)
+
 	scrivener := scrivener.New(form)
 	scrivener.AssertPresent("Name")
 
