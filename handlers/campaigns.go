@@ -5,20 +5,12 @@ import (
 
 	"./../forms"
 	"./../logic"
-	"./../models"
 )
-
-type RootPage struct {
-	Campaigns []*models.Campaign
-}
 
 func CampaignsIndexGet(ctx Context) {
 	campaigns := logic.GetUserCampaigns(ctx.Session.Values["user_id"].(int64))
-
-	rootPage := RootPage{
-		Campaigns: campaigns}
-
-	ctx.Render("views/campaigns/index.html", rootPage)
+	ctx.Render("views/campaigns/index.html", map[string]interface{}{
+		"Campaigns": campaigns})
 }
 
 func CampaignNewGet(ctx Context) {

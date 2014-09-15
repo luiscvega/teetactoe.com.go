@@ -11,6 +11,7 @@ import (
 )
 
 type Context struct {
+	Locals   map[string]interface{}
 	Response http.ResponseWriter
 	*http.Request
 	*sessions.Session
@@ -20,8 +21,7 @@ type Context struct {
 func (ctx Context) Render(view string, locals interface{}) {
 	t := template.Must(template.ParseFiles("views/layout.html", view))
 
-	page := Page{
-		Locals: locals}
+	page := Page{Locals: locals}
 
 	userId, ok := ctx.Session.Values["user_id"].(int64)
 	if ok {
