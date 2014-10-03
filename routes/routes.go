@@ -6,35 +6,35 @@ import (
 	"github.com/bmizerany/pat"
 	"github.com/gorilla/sessions"
 
-	"./../handlers"
+	h "./../handlers"
 )
 
 func Initialize() *pat.PatternServeMux {
 	m := pat.New()
 
-	m.Get("/", prepare(handlers.RootGet))
+	m.Get("/", prepare(h.RootGet))
 
-	m.Get("/signup", prepare(handlers.SignupGet))
-	m.Post("/signup", prepare(handlers.SignupPost))
+	m.Get("/signup", prepare(h.SignupGet))
+	m.Post("/signup", prepare(h.SignupPost))
 
-	m.Get("/admin/logout", prepare(handlers.LogoutGet))
-	m.Get("/admin/login", prepare(handlers.LoginGet))
-	m.Post("/admin/login", prepare(handlers.LoginPost))
+	m.Get("/admin/logout", prepare(h.LogoutGet))
+	m.Get("/admin/login", prepare(h.LoginGet))
+	m.Post("/admin/login", prepare(h.LoginPost))
 
-	m.Get("/admin/campaigns", prepare(handlers.CampaignsIndexGet))
-	m.Post("/admin/campaigns", prepare(handlers.CampaignCreatePost))
-	m.Get("/admin/campaigns/new", prepare(handlers.CampaignNewGet))
+	m.Get("/admin/campaigns", prepare(h.CampaignsIndexGet))
+	m.Post("/admin/campaigns", prepare(h.CampaignCreatePost))
+	m.Get("/admin/campaigns/new", prepare(h.CampaignNewGet))
 
 	return m
 }
 
 var store = sessions.NewCookieStore([]byte("something-very-secret"))
 
-func prepare(handler func(ctx handlers.Context)) http.Handler {
+func prepare(handler func(ctx h.Context)) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "teetactoe.com")
 
-		ctx := handlers.Context{
+		ctx := h.Context{
 			Response: w,
 			Request:  r,
 			Session:  session}
