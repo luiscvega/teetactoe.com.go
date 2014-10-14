@@ -21,7 +21,11 @@ func LoginPost(ctx Context) {
 		return
 	}
 
-	user := logic.AuthenticateUser(email, password)
+	user, err := logic.AuthenticateUser(email, password)
+	if err != nil {
+		ctx.Redirect("/")
+		return
+	}
 
 	ctx.Session.Values["user_id"] = user.Id
 	ctx.Session.Save(ctx.Request, ctx.Response)
