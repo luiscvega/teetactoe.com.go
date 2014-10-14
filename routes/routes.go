@@ -2,6 +2,7 @@ package routes
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/bmizerany/pat"
@@ -42,6 +43,7 @@ func prepare(handler func(ctx h.Context)) http.Handler {
 
 		defer func() {
 			if r := recover(); r != nil {
+				log.Println("ERROR:", r)
 				t := template.Must(template.ParseFiles("views/404.html"))
 				t.Execute(w, nil)
 			}

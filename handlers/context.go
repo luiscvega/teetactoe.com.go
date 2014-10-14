@@ -25,7 +25,7 @@ func (ctx Context) Render(view string, locals interface{}) error {
 
 	userId, ok := ctx.Session.Values["user_id"].(int)
 	if ok {
-		page.CurrentUser, _ = logic.GetUser(userId)
+		page.CurrentUser = logic.GetUser(userId)
 	}
 
 	return t.Execute(ctx.Response, page)
