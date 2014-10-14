@@ -18,17 +18,17 @@ type Context struct {
 	Page
 }
 
-func (ctx Context) Render(view string, locals interface{}) {
+func (ctx Context) Render(view string, locals interface{}) error {
 	t := template.Must(template.ParseFiles("views/layout.html", view))
 
 	page := Page{Locals: locals}
 
 	userId, ok := ctx.Session.Values["user_id"].(int)
 	if ok {
-		page.CurrentUser = logic.GetUser(userId)
+		page.CurrentUser, _ = logic.GetUser(userId)
 	}
 
-	t.Execute(ctx.Response, page)
+	return t.Execute(ctx.Response, page)
 }
 
 func (ctx Context) Redirect(url string) {

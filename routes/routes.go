@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"html/template"
 	"net/http"
 
 	"github.com/bmizerany/pat"
@@ -38,6 +39,13 @@ func prepare(handler func(ctx h.Context)) http.Handler {
 			Response: w,
 			Request:  r,
 			Session:  session}
+
+		defer func() {
+			if r := recover(); r != nil {
+				t := template.Must(template.ParseFiles("views/404.html"))
+				t.Execute(w, nil)
+			}
+		}()
 
 		handler(ctx)
 	})

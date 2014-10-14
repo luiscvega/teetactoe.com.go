@@ -2,10 +2,11 @@ package logic
 
 import (
 	"errors"
-	"log"
 
 	"./../models"
 )
+
+var ErrUserExists = errors.New("A user with that email already exists!")
 
 func CreateUser(user *models.User, password string) (err error) {
 	user.CryptedPassword = password
@@ -18,7 +19,7 @@ func CreateUser(user *models.User, password string) (err error) {
 	}
 
 	if count == 1 {
-		return errors.New("A user with that email already exists!")
+		return ErrUserExists
 	}
 
 	stmt, err := DB.Prepare("INSERT INTO users (email, first_name, last_name, crypted_password) VALUES ($1, $2, $3, $4) RETURNING id")

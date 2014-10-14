@@ -8,7 +8,7 @@ import (
 )
 
 func CampaignsIndexGet(ctx Context) {
-	campaigns := logic.GetUserCampaigns(ctx.Session.Values["user_id"].(int))
+	campaigns, _ := logic.GetUserCampaigns(ctx.Session.Values["user_id"].(int))
 	ctx.Render("views/campaigns/index.html", map[string]interface{}{
 		"Campaigns": campaigns})
 }

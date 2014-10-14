@@ -2,7 +2,6 @@ package logic
 
 import (
 	"database/sql"
-	"log"
 
 	"./../models"
 )

@@ -1,8 +1,6 @@
 package logic
 
 import (
-	"log"
-
 	"./../models"
 )
 

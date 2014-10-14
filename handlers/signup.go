@@ -1,10 +1,6 @@
 package handlers
 
 import (
-	"fmt"
-	"log"
-	"net/http"
-
 	"./../forms"
 	"./../logic"
 )
@@ -18,18 +14,18 @@ func SignupPost(ctx Context) {
 
 	user, formErrors := forms.Signup.Validate(ctx.Request.Form)
 	if formErrors.Any() {
-		fmt.Println(formErrors)
+		ctx.Render("views/signup.html", ctx.Page)
 		return
 	}
 
-	if err := logic.CreateUser(user, password); err != nil {
-		switch {
-		case err.Error() == "A user with that email already exists!":
-			http.Error(ctx.Response, err.Error(), 500)
+	err := logic.CreateUser(user, password)
+	if err != nil {
+		if err == logic.ErrUserExists {
+			ctx.Render("views/signup.html", ctx.Page)
 			return
-		default:
-			log.Fatal(err)
 		}
+
+		panic(err)
 	}
 
 	ctx.Session.Values["user_id"] = user.Id
