@@ -14,7 +14,7 @@ func LoginPost(ctx Context) {
 	password := ctx.Request.FormValue("password")
 
 	formErrors := forms.Login.Validate(ctx.Request.Form)
-	if len(formErrors) > 0 {
+	if formErrors.Any() {
 		ctx.Render("views/login.html", ctx.Page)
 		return
 	}

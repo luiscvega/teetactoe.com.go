@@ -24,8 +24,8 @@ func (form *campaign) Validate(params url.Values) (campaign *models.Campaign, fo
 		return
 	}
 
-        campaign = new(models.Campaign)
-        campaign.Name = form.Name
+	campaign = new(models.Campaign)
+	campaign.Name = form.Name
 
-        return
+	return
 }
