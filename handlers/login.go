@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"log"
-
 	"./../forms"
 	"./../logic"
 )
@@ -17,13 +15,13 @@ func LoginPost(ctx Context) {
 
 	formErrors := forms.Login.Validate(ctx.Request.Form)
 	if len(formErrors) > 0 {
-		log.Fatal(formErrors)
+		ctx.Render("views/login.html", ctx.Page)
 		return
 	}
 
 	user, err := logic.AuthenticateUser(email, password)
 	if err != nil {
-		ctx.Redirect("/")
+		ctx.Render("views/login.html", ctx.Page)
 		return
 	}
 
