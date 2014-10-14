@@ -6,15 +6,15 @@ import (
 	"./../models"
 )
 
-func GetUserCampaigns(userId int) (campaigns []*models.Campaign) {
+func GetUserCampaigns(userId int) (campaigns []*models.Campaign, err error) {
 	stmt, err := DB.Prepare("SELECT id, name FROM campaigns WHERE user_id = $1")
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	rows, err := stmt.Query(userId)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	campaigns = make([]*models.Campaign, 0)
@@ -24,5 +24,5 @@ func GetUserCampaigns(userId int) (campaigns []*models.Campaign) {
 		campaigns = append(campaigns, &campaign)
 	}
 
-	return campaigns
+	return campaigns, nil
 }
