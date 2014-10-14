@@ -19,8 +19,9 @@ func LoginPost(ctx Context) {
 		return
 	}
 
-	user, err := logic.AuthenticateUser(email, password)
-	if err != nil {
+	user := logic.AuthenticateUser(email, password)
+	if user == nil {
+		// User was not found. Invalid credentials?
 		ctx.Render("views/login.html", ctx.Page)
 		return
 	}
