@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"log"
+
 	"./../forms"
 	"./../logic"
 )
@@ -19,7 +21,11 @@ func LoginPost(ctx Context) {
 		return
 	}
 
-	user := logic.AuthenticateUser(email, password)
+	user, err := logic.AuthenticateUser(email, password)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	if user == nil {
 		// User was not found. Invalid credentials?
 		ctx.Render("views/login.html", ctx.Page)
