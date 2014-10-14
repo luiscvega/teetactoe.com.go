@@ -9,7 +9,7 @@ import (
 	"./../models"
 )
 
-func CreateCampaign(campaign *models.Campaign, userId int64) (err error) {
+func CreateCampaign(campaign *models.Campaign, userId int) (err error) {
 	campaign.UserId = userId
 
 	scrivener := scrivener.New(campaign)

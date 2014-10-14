@@ -8,7 +8,7 @@ import (
 )
 
 func CampaignsIndexGet(ctx Context) {
-	campaigns := logic.GetUserCampaigns(ctx.Session.Values["user_id"].(int64))
+	campaigns := logic.GetUserCampaigns(ctx.Session.Values["user_id"].(int))
 	ctx.Render("views/campaigns/index.html", map[string]interface{}{
 		"Campaigns": campaigns})
 }
@@ -26,8 +26,8 @@ func CampaignCreatePost(ctx Context) {
 		return
 	}
 
-	if err := logic.CreateCampaign(campaign, ctx.Session.Values["user_id"].(int64)); err != nil {
+	if err := logic.CreateCampaign(campaign, ctx.Session.Values["user_id"].(int)); err != nil {
 	}
 
-	ctx.Redirect("/")
+	ctx.Redirect("/admin/campaigns")
 }

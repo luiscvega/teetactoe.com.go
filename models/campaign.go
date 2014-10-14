@@ -1,9 +1,9 @@
 package models
 
 type Campaign struct {
-	Id     int64
+	Id     int
 	Name   string
-	UserId int64
+	UserId int
 }
 
 //CREATE TABLE campaigns

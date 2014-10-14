@@ -23,7 +23,7 @@ func (ctx Context) Render(view string, locals interface{}) {
 
 	page := Page{Locals: locals}
 
-	userId, ok := ctx.Session.Values["user_id"].(int64)
+	userId, ok := ctx.Session.Values["user_id"].(int)
 	if ok {
 		page.CurrentUser = logic.GetUser(userId)
 	}
