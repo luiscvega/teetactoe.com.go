@@ -20,12 +20,8 @@ func SignupPost(ctx Context) {
 
 	err := logic.CreateUser(user, password)
 	if err != nil {
-		if err == logic.ErrUserExists {
-			ctx.Render("views/signup.html", ctx.Page)
-			return
-		}
-
-		panic(err)
+		ctx.Render("views/signup.html", ctx.Page)
+		return
 	}
 
 	ctx.Session.Values["user_id"] = user.Id
