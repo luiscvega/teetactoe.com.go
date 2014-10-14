@@ -21,7 +21,7 @@ type Context struct {
 func (ctx Context) Render(view string, locals interface{}) error {
 	t := template.Must(template.ParseFiles("views/layout.html", view))
 
-	page := Page{Locals: locals}
+	page := locals.(Page)
 
 	userId, ok := ctx.Session.Values["user_id"].(int)
 	if ok {
@@ -36,6 +36,7 @@ func (ctx Context) Redirect(url string) {
 }
 
 type Page struct {
-	CurrentUser *models.User
-	Locals      interface{}
+	CurrentUser  *models.User
+	Locals       interface{}
+	ErrorMessage string
 }

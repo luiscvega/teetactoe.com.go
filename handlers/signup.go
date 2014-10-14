@@ -20,6 +20,7 @@ func SignupPost(ctx Context) {
 
 	err := logic.CreateUser(user, password)
 	if err != nil {
+		ctx.Page.ErrorMessage = err.Error()
 		ctx.Render("views/signup.html", ctx.Page)
 		return
 	}

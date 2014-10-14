@@ -27,7 +27,7 @@ func LoginPost(ctx Context) {
 	}
 
 	if user == nil {
-		// User was not found. Invalid credentials?
+		ctx.Page.ErrorMessage = "Invalid credentials!"
 		ctx.Render("views/login.html", ctx.Page)
 		return
 	}

@@ -55,6 +55,10 @@
     </nav>
 
     <div class="container">
+      {{if .ErrorMessage}}
+        <div class="alert alert-success" role="alert">{{.ErrorMessage}}</div>
+      {{end}}
+
       {{template "content" .Locals}}
     </div>
 
