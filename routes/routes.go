@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"runtime/debug"
 
 	"github.com/bmizerany/pat"
 	"github.com/gorilla/sessions"
@@ -50,6 +51,7 @@ func prepare(handler func(ctx h.Context)) http.Handler {
 func catchPanic(w http.ResponseWriter) {
 	if r := recover(); r != nil {
 		log.Println("ERROR:", r)
+		log.Printf("TRACE: %s", debug.Stack())
 		t := template.Must(template.ParseFiles("views/404.html"))
 		t.Execute(w, nil)
 	}
