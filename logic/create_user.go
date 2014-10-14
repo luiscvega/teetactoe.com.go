@@ -16,8 +16,7 @@ func CreateUser(user *models.User, password string) (err error) {
 		log.Fatal(err)
 	}
 	if count == 1 {
-		err = errors.New("A user with that email already exists!")
-		return
+		return errors.New("A user with that email already exists!")
 	}
 
 	stmt, err := DB.Prepare("INSERT INTO users (email, first_name, last_name, crypted_password) VALUES ($1, $2, $3, $4) RETURNING id")
@@ -30,5 +29,5 @@ func CreateUser(user *models.User, password string) (err error) {
 		log.Fatal(err)
 	}
 
-	return
+	return nil
 }

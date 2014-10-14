@@ -1,7 +1,6 @@
 package logic
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/luiscvega/scrivener"
@@ -16,9 +15,8 @@ func CreateCampaign(campaign *models.Campaign, userId int) (err error) {
 	scrivener.AssertPresent("UserId")
 
 	if len(scrivener.Errors) > 0 {
-		fmt.Println("HELLO!")
 		log.Fatal("NO USER ID!")
-		return
+		return err
 	}
 
 	stmt, err := DB.Prepare("INSERT INTO campaigns (name, user_id) VALUES ($1, $2) RETURNING id")
@@ -31,5 +29,5 @@ func CreateCampaign(campaign *models.Campaign, userId int) (err error) {
 		log.Fatal(err)
 	}
 
-	return
+	return nil
 }
