@@ -24,5 +24,5 @@ func GetUserCampaigns(userId int) (campaigns []*models.Campaign) {
 		campaigns = append(campaigns, &campaign)
 	}
 
-	return
+	return campaigns
 }
