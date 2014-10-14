@@ -41,13 +41,13 @@ func prepare(handler func(ctx h.Context)) http.Handler {
 			Request:  r,
 			Session:  session}
 
-		defer catchPanic()
+		defer catchPanic(w)
 
 		handler(ctx)
 	})
 }
 
-func catchPanic() {
+func catchPanic(w http.ResponseWriter) {
 	if r := recover(); r != nil {
 		log.Println("ERROR:", r)
 		t := template.Must(template.ParseFiles("views/404.html"))
