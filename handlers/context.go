@@ -21,14 +21,14 @@ type Context struct {
 func (ctx Context) Render(view string, locals interface{}) error {
 	t := template.Must(template.ParseFiles("views/layout.html", view))
 
-	page := locals.(Page)
+	ctx.Page.Locals = locals
 
 	userId, ok := ctx.Session.Values["user_id"].(int)
 	if ok {
-		page.CurrentUser = logic.GetUser(userId)
+		ctx.Page.CurrentUser = logic.GetUser(userId)
 	}
 
-	return t.Execute(ctx.Response, page)
+	return t.Execute(ctx.Response, ctx.Page)
 }
 
 func (ctx Context) Redirect(url string) {

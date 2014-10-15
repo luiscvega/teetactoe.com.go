@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 
 	"./../forms"
 	"./../logic"
@@ -17,12 +16,18 @@ func CampaignNewGet(ctx Context) {
 	ctx.Render("views/campaigns/new.html", ctx.Page)
 }
 
+func CampaignsShowGet(ctx Context) {
+	campaignId := ctx.Request.URL.Query().Get(":campaign_id")
+	campaign := logic.GetCampaign(campaignId)
+	ctx.Render("views/campaigns/show.html", map[string]interface{}{
+		"Campaign": campaign})
+}
+
 func CampaignCreatePost(ctx Context) {
 	ctx.ParseForm()
 
 	campaign, formErrors := forms.Campaign.Validate(ctx.Request.Form)
 	if formErrors.Any() {
-		fmt.Println(formErrors)
 		return
 	}
 

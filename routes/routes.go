@@ -25,8 +25,9 @@ func Initialize() *pat.PatternServeMux {
 	m.Post("/admin/login", prepare(h.LoginPost))
 
 	m.Get("/admin/campaigns", prepare(h.CampaignsIndexGet))
-	m.Post("/admin/campaigns", prepare(h.CampaignCreatePost))
 	m.Get("/admin/campaigns/new", prepare(h.CampaignNewGet))
+	m.Get("/admin/campaigns/:campaign_id", prepare(h.CampaignsShowGet))
+	m.Post("/admin/campaigns", prepare(h.CampaignCreatePost))
 
 	return m
 }
