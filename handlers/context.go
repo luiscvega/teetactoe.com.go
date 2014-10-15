@@ -22,11 +22,7 @@ func (ctx Context) Render(view string, locals interface{}) error {
 	t := template.Must(template.ParseFiles("views/layout.html", view))
 
 	ctx.Page.Locals = locals
-
-	userId, ok := ctx.Session.Values["user_id"].(int)
-	if ok {
-		ctx.Page.CurrentUser = logic.GetUser(userId)
-	}
+	ctx.Page.CurrentUser = logic.GetUser(ctx.Session.Values["user_id"])
 
 	return t.Execute(ctx.Response, ctx.Page)
 }
