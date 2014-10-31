@@ -9,21 +9,27 @@ import (
 	h "./../handlers"
 )
 
-func Initialize() *pat.PatternServeMux {
+func Admin() *pat.PatternServeMux {
+	m := pat.New()
+
+	m.Get("/logout", prepare(h.LogoutGet))
+	m.Get("/login", prepare(h.LoginGet))
+	m.Post("/login", prepare(h.LoginPost))
+
+	m.Get("/campaigns", prepare(h.CampaignsIndexGet))
+	m.Post("/campaigns", prepare(h.CampaignCreatePost))
+	m.Get("/campaigns/new", prepare(h.CampaignNewGet))
+
+	return m
+}
+
+func Guest() *pat.PatternServeMux {
 	m := pat.New()
 
 	m.Get("/", prepare(h.RootGet))
 
 	m.Get("/signup", prepare(h.SignupGet))
 	m.Post("/signup", prepare(h.SignupPost))
-
-	m.Get("/admin/logout", prepare(h.LogoutGet))
-	m.Get("/admin/login", prepare(h.LoginGet))
-	m.Post("/admin/login", prepare(h.LoginPost))
-
-	m.Get("/admin/campaigns", prepare(h.CampaignsIndexGet))
-	m.Post("/admin/campaigns", prepare(h.CampaignCreatePost))
-	m.Get("/admin/campaigns/new", prepare(h.CampaignNewGet))
 
 	return m
 }

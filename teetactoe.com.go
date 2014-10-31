@@ -18,9 +18,9 @@ func main() {
 	}
 	logic.DB = db
 
+	http.Handle("/", routes.Guest())
+	http.Handle("/admin/", http.StripPrefix("/admin", routes.Admin()))
 	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public"))))
-
-	http.Handle("/", routes.Initialize())
 
 	http.ListenAndServe(":3000", nil)
 
