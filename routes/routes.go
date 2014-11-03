@@ -9,18 +9,36 @@ import (
 	h "./../handlers"
 )
 
-func Admin() *pat.PatternServeMux {
+type x struct {
+	pat *pat.PatternServeMux
+}
+
+func (thing x) Get(path string, hand func(h.Context)) {
+	thing.pat.Get(path, prepare(hand))
+}
+
+func (thing x) Post(path string, hand func(h.Context)) {
+	thing.pat.Post(path, prepare(hand))
+}
+
+func (thing x) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	thing.pat.ServeHTTP(w,r)
+}
+
+func Admin() x {
 	m := pat.New()
 
-	m.Get("/logout", prepare(h.LogoutGet))
-	m.Get("/login", prepare(h.LoginGet))
-	m.Post("/login", prepare(h.LoginPost))
+	y := x{m}
 
-	m.Get("/campaigns", prepare(h.CampaignsIndexGet))
-	m.Post("/campaigns", prepare(h.CampaignCreatePost))
-	m.Get("/campaigns/new", prepare(h.CampaignNewGet))
+	y.Get("/logout", h.LogoutGet)
+	y.Get("/login", h.LoginGet)
+	y.Post("/login", h.LoginPost)
 
-	return m
+	y.Get("/campaigns", h.CampaignsIndexGet)
+	y.Post("/campaigns", h.CampaignCreatePost)
+	y.Get("/campaigns/new", h.CampaignNewGet)
+
+	return y
 }
 
 func Guest() *pat.PatternServeMux {
