@@ -2,8 +2,9 @@
   <h1>Campaigns!</h1>
   <a href="/admin/campaigns/new">Create Campaign</a>
 
+  <hr />
   {{range .Campaigns}}
-    <p>{{.Name}}<p>
+    <p><a href="/admin/campaigns/{{.Id}}">{{.Name}}</a><p>
   {{end}}
 
 {{end}}

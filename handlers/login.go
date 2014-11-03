@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"log"
-
 	"./../forms"
 	"./../logic"
 )
@@ -16,12 +14,17 @@ func LoginPost(ctx Context) {
 	password := ctx.Request.FormValue("password")
 
 	formErrors := forms.Login.Validate(ctx.Request.Form)
-	if len(formErrors) > 0 {
-		log.Fatal(formErrors)
+	if formErrors.Any() {
+		ctx.Render("views/login.html", ctx.Page)
 		return
 	}
 
 	user := logic.AuthenticateUser(email, password)
+	if user == nil {
+		ctx.Page.ErrorMessage = "Invalid credentials!"
+		ctx.Render("views/login.html", ctx.Page)
+		return
+	}
 
 	ctx.Session.Values["user_id"] = user.Id
 	ctx.Session.Save(ctx.Request, ctx.Response)

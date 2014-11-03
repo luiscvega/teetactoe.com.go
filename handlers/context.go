@@ -18,17 +18,13 @@ type Context struct {
 	Page
 }
 
-func (ctx Context) Render(view string, locals interface{}) {
+func (ctx Context) Render(view string, locals interface{}) error {
 	t := template.Must(template.ParseFiles("views/layout.html", view))
 
-	page := Page{Locals: locals}
+	ctx.Page.Locals = locals
+	ctx.Page.CurrentUser = logic.GetUser(ctx.Session.Values["user_id"])
 
-	userId, ok := ctx.Session.Values["user_id"].(int64)
-	if ok {
-		page.CurrentUser = logic.GetUser(userId)
-	}
-
-	t.Execute(ctx.Response, page)
+	return t.Execute(ctx.Response, ctx.Page)
 }
 
 func (ctx Context) Redirect(url string) {
@@ -36,6 +32,7 @@ func (ctx Context) Redirect(url string) {
 }
 
 type Page struct {
-	CurrentUser *models.User
-	Locals      interface{}
+	CurrentUser  *models.User
+	Locals       interface{}
+	ErrorMessage string
 }
